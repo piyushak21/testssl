@@ -1,5 +1,5 @@
-const https = require('https');
-const AWS = require('aws-sdk');
+import https from 'https';
+import AWS from 'aws-sdk';
 
 // Create an AWS ACM instance
 const acm = new AWS.ACM();
