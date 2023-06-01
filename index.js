@@ -1,17 +1,50 @@
-import express from "express";
-import cors from "cors";
+import https from 'https';
+import { ACM } from 'aws-sdk';
 
-const app = express();
+const acm = new ACM();
 
-app.use(cors({ origin: "*" }));
+const certificateArn = 'arn:aws:acm:ap-south-1:542367258819:certificate/5776488c-31c0-45ce-a548-8029c4d2a75c';
 
-app.get("/api", (req, res) => {
-  res.json({
-    message: "test",
-    statusCode: 200,
-  });
-});
+const getCertificate = async () => {
+  const params = {
+    CertificateArn: certificateArn
+  };
 
-app.listen(443, () => {
-  console.log("App is running on 5001");
-});
+  try {
+    const { Certificate } = await acm.describeCertificate(params).promise();
+    return Certificate.CertificateBody;
+  } catch (error) {
+    console.error('Failed to retrieve the SSL certificate:', error);
+    process.exit(1);
+  }
+};
+
+const createServer = async () => {
+  try {
+    const certificate = await getCertificate();
+    const options = {
+      key: certificate.PrivateKey,
+      cert: certificate.Certificate
+    };
+
+    const server = https.createServer(options, (req, res) => {
+      if (req.url === '/check-https') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: 'HTTPS is working!' }));
+      } else {
+        // Handle your other API endpoints here
+        // ...
+      }
+    });
+
+    const port = 443; // Default HTTPS port
+    server.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+  } catch (error) {
+    console.error('Failed to create the HTTPS server:', error);
+    process.exit(1);
+  }
+};
+
+createServer();
