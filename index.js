@@ -16,7 +16,7 @@ const getCertificate = async () => {
 
   try {
     const { Certificate } = await acm.describeCertificate(params).promise();
-    return Certificate.CertificateBody;
+    return Certificate;
   } catch (error) {
     console.error('Failed to retrieve the SSL certificate:', error);
     process.exit(1);
