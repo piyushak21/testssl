@@ -1,7 +1,7 @@
-import https from 'https';
-import { ACM } from 'aws-sdk';
+const https = require('https');
+const AWS = require('aws-sdk');
 
-const acm = new ACM();
+const acm = new AWS.ACM();
 
 const certificateArn = 'arn:aws:acm:ap-south-1:542367258819:certificate/5776488c-31c0-45ce-a548-8029c4d2a75c';
 
