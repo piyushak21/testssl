@@ -1,5 +1,5 @@
 import https from 'https';
-import AWS from 'aws-sdk';
+import { AWS } from 'aws-sdk';
 
 // Create an AWS ACM instance
 const acm = new AWS.ACM();
