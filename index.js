@@ -1,5 +1,5 @@
 const https = require('https');
-const AWS = require('aws-sdk');
+const { ACM } = require('aws-sdk');
 
 const acm = new ACM({ region: 'ap-south-1' }); // Replace 'us-east-1' with your desired AWS region
 
